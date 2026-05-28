@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-white font-inter overflow-hidden;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-dark-card backdrop-blur-md rounded-xl shadow-lg;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .neon-text {
+    @apply text-neon-blue;
+    filter: drop-shadow(0 0 5px rgba(0, 243, 255, 0.8));
+  }
+
+  .neon-border {
+    border: 1px solid #00f3ff;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+  }
+
+  .btn-primary {
+    @apply bg-transparent text-neon-blue px-6 py-2 rounded-lg font-orbitron tracking-wider transition-all duration-300 uppercase;
+    border: 1px solid #00f3ff;
+  }
+
+  .btn-primary:hover {
+    background-color: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.95);
+  }
+
+  .input-field {
+    @apply w-full bg-black/50 rounded-lg px-4 py-3 text-white placeholder-white/40 transition-all duration-300;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: #bc13fe;
+    box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .math-prose .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .math-prose p {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.canvas-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+@keyframes moveBackground {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 0% -1000%;
+  }
+}
