@@ -10,7 +10,7 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT || 3306,
   ssl: {
-      rejectUnauthorized: false
+    rejectUnauthorized: false
   },
   waitForConnections: true,
   connectionLimit: 10,
@@ -62,7 +62,6 @@ const initDB = async () => {
     connection.release();
   } catch (error) {
     console.error('Database initialization failed:', error);
-    process.exit(1);
   }
 };
 
