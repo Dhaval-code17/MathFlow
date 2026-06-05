@@ -327,10 +327,14 @@ const Calculator = ({ onHistoryClick, onCalculationComplete }) => {
 
             registerCalculation(display, resultStr);
 
-            await axios.post('/api/calculate', {
-                expression: display,
-                result: resultStr
-            });
+            try {
+                await axios.post('/api/calculate', {
+                    expression: display,
+                    result: resultStr
+                });
+            } catch (apiError) {
+                console.warn("Failed to save calculation history to database", apiError);
+            }
 
             if (onCalculationComplete) onCalculationComplete();
         } catch (error) {
