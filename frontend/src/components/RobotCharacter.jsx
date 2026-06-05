@@ -18,6 +18,7 @@ const EXPRESSIONS = {
     surprised: { leftEye: '◎', rightEye: '◎', mouth: 'O', color: '#00f5ff' },
     cool: { leftEye: '▬', rightEye: '▬', mouth: '⌣', color: '#bc13fe' },
     glitch: { leftEye: '◇', rightEye: '◆', mouth: '≋', color: '#ff00ff' },
+    cute: { leftEye: '^', rightEye: '^', mouth: 'ω', color: '#ff6b9d' },
 };
 
 const getExpression = (universeState) => {
@@ -36,7 +37,8 @@ const RobotCharacter = () => {
     const { isDark } = useTheme();
     const [expressionKey, setExpressionKey] = useState('idle');
     const [blinking, setBlinking] = useState(false);
-    const expression = EXPRESSIONS[expressionKey];
+    const [isClicked, setIsClicked] = useState(false);
+    const expression = isClicked ? EXPRESSIONS.cute : EXPRESSIONS[expressionKey];
 
     // Update expression based on universe state
     useEffect(() => {
@@ -54,8 +56,8 @@ const RobotCharacter = () => {
         return () => clearInterval(interval);
     }, [expressionKey]);
 
-    const bodyColor = isDark ? '#0d1117' : '#ffffff';
-    const borderColor = isDark ? expression.color : '#1a202c';
+    const bodyColor = isDark ? '#1e293b' : '#cbd5e1';
+    const borderColor = isDark ? expression.color : '#475569';
 
     return (
         <div className="absolute -left-52 top-1/2 -translate-y-1/2 z-20 hidden lg:flex flex-col items-center gap-3"
@@ -97,15 +99,23 @@ const RobotCharacter = () => {
 
             {/* Robot Body */}
             <motion.div
-                className="relative flex flex-col items-center"
-                animate={{
-                    y: [0, -3, 0],
+                className="relative flex flex-col items-center cursor-pointer"
+                onClick={() => {
+                    if (!isClicked) {
+                        setIsClicked(true);
+                        setTimeout(() => setIsClicked(false), 2000);
+                    }
                 }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                }}
+                animate={
+                    isClicked
+                        ? { y: [0, -20, 0, -10, 0] }
+                        : { y: [0, -3, 0] }
+                }
+                transition={
+                    isClicked
+                        ? { duration: 0.6 }
+                        : { duration: 2, repeat: Infinity, ease: 'easeInOut' }
+                }
             >
                 {/* Antenna */}
                 <div className="relative mb-1">
@@ -151,12 +161,12 @@ const RobotCharacter = () => {
                         {expression.mouth}
                     </div>
 
-                    {/* Cheek blush (when happy/excited) */}
-                    {(expressionKey === 'happy' || expressionKey === 'excited') && (
+                    {/* Cheek blush (when happy/excited/cute) */}
+                    {(expressionKey === 'happy' || expressionKey === 'excited' || isClicked) && (
                         <>
-                            <div className="absolute bottom-3 left-2 w-3 h-1.5 rounded-full opacity-40"
+                            <div className="absolute bottom-3 left-2 w-3 h-1.5 rounded-full opacity-60"
                                 style={{ background: '#ff6b9d' }} />
-                            <div className="absolute bottom-3 right-2 w-3 h-1.5 rounded-full opacity-40"
+                            <div className="absolute bottom-3 right-2 w-3 h-1.5 rounded-full opacity-60"
                                 style={{ background: '#ff6b9d' }} />
                         </>
                     )}
@@ -185,15 +195,15 @@ const RobotCharacter = () => {
                     {/* Arms */}
                     <motion.div
                         className="absolute -left-4 top-2 w-3 h-8 rounded-full"
-                        style={{ background: bodyColor, border: `1.5px solid ${borderColor}` }}
-                        animate={expressionKey === 'excited' ? { rotate: [-10, 10, -10] } : { rotate: 0 }}
-                        transition={{ duration: 0.5, repeat: expressionKey === 'excited' ? Infinity : 0 }}
+                        style={{ background: bodyColor, border: `1.5px solid ${borderColor}`, transformOrigin: 'top center' }}
+                        animate={isClicked ? { rotate: [0, -140, -100, -140, 0] } : expressionKey === 'excited' ? { rotate: [-10, 10, -10] } : { rotate: 0 }}
+                        transition={{ duration: isClicked ? 1 : 0.5, repeat: expressionKey === 'excited' ? Infinity : 0 }}
                     />
                     <motion.div
                         className="absolute -right-4 top-2 w-3 h-8 rounded-full"
-                        style={{ background: bodyColor, border: `1.5px solid ${borderColor}` }}
-                        animate={expressionKey === 'excited' ? { rotate: [10, -10, 10] } : { rotate: 0 }}
-                        transition={{ duration: 0.5, repeat: expressionKey === 'excited' ? Infinity : 0 }}
+                        style={{ background: bodyColor, border: `1.5px solid ${borderColor}`, transformOrigin: 'top center' }}
+                        animate={isClicked ? { rotate: [0, 140, 100, 140, 0] } : expressionKey === 'excited' ? { rotate: [10, -10, 10] } : { rotate: 0 }}
+                        transition={{ duration: isClicked ? 1 : 0.5, repeat: expressionKey === 'excited' ? Infinity : 0 }}
                     />
                 </div>
 

@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { Stage, Layer, Line, Text as KonvaText, Circle as KonvaCircle, Rect } from 'react-konva';
 import { Pencil, Square, Circle, Eraser, Type, Wand2, Trash2, Sparkles } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 const GeometryCanvas = ({ onSolveCanvas }) => {
+    const theme = useTheme();
     const stageRef = useRef(null);
     const [tool, setTool] = useState('pen'); // pen, eraser, text, rect, circle
     const [color, setColor] = useState('#1f2937'); // active color
@@ -350,17 +352,17 @@ const GeometryCanvas = ({ onSolveCanvas }) => {
 
     return (
         <div className="flex flex-col h-full w-full relative">
-            <div className="flex gap-2 mb-2 bg-black/40 p-2 rounded-lg border border-white/10 items-center">
-                <button onClick={() => setTool('pen')} className={`p-1.5 rounded-lg transition-colors ${tool==='pen' ? 'bg-[#00f5ff]/20 text-[#00f5ff]' : 'text-gray-400 hover:text-white hover:bg-white/10'}`}><Pencil size={18}/></button>
-                <button onClick={() => setTool('rect')} className={`p-1.5 rounded-lg transition-colors ${tool==='rect' ? 'bg-[#00f5ff]/20 text-[#00f5ff]' : 'text-gray-400 hover:text-white hover:bg-white/10'}`}><Square size={18}/></button>
-                <button onClick={() => setTool('circle')} className={`p-1.5 rounded-lg transition-colors ${tool==='circle' ? 'bg-[#00f5ff]/20 text-[#00f5ff]' : 'text-gray-400 hover:text-white hover:bg-white/10'}`}><Circle size={18}/></button>
-                <button onClick={() => setTool('text')} className={`p-1.5 rounded-lg transition-colors ${tool==='text' ? 'bg-[#00f5ff]/20 text-[#00f5ff]' : 'text-gray-400 hover:text-white hover:bg-white/10'}`}><Type size={18}/></button>
-                <button onClick={() => setTool('eraser')} className={`p-1.5 rounded-lg transition-colors ${tool==='eraser' ? 'bg-[#00f5ff]/20 text-[#00f5ff]' : 'text-gray-400 hover:text-white hover:bg-white/10'}`}><Eraser size={18}/></button>
+            <div className={`flex gap-2 mb-2 ${theme.isDark ? 'bg-black/40 border-white/10' : 'bg-black/5 border-black/10'} p-2 rounded-lg border items-center`}>
+                <button onClick={() => setTool('pen')} className={`p-1.5 rounded-lg transition-colors ${tool==='pen' ? `bg-[#00f5ff]/20 ${theme.isDark ? 'text-[#00f5ff]' : 'text-[#008b9c]'}` : (theme.isDark ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/10')}`}><Pencil size={18}/></button>
+                <button onClick={() => setTool('rect')} className={`p-1.5 rounded-lg transition-colors ${tool==='rect' ? `bg-[#00f5ff]/20 ${theme.isDark ? 'text-[#00f5ff]' : 'text-[#008b9c]'}` : (theme.isDark ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/10')}`}><Square size={18}/></button>
+                <button onClick={() => setTool('circle')} className={`p-1.5 rounded-lg transition-colors ${tool==='circle' ? `bg-[#00f5ff]/20 ${theme.isDark ? 'text-[#00f5ff]' : 'text-[#008b9c]'}` : (theme.isDark ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/10')}`}><Circle size={18}/></button>
+                <button onClick={() => setTool('text')} className={`p-1.5 rounded-lg transition-colors ${tool==='text' ? `bg-[#00f5ff]/20 ${theme.isDark ? 'text-[#00f5ff]' : 'text-[#008b9c]'}` : (theme.isDark ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/10')}`}><Type size={18}/></button>
+                <button onClick={() => setTool('eraser')} className={`p-1.5 rounded-lg transition-colors ${tool==='eraser' ? `bg-[#00f5ff]/20 ${theme.isDark ? 'text-[#00f5ff]' : 'text-[#008b9c]'}` : (theme.isDark ? 'text-gray-400 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-black hover:bg-black/10')}`}><Eraser size={18}/></button>
                 
-                <div className="h-6 w-px bg-white/20 mx-1"></div>
+                <div className={`h-6 w-px ${theme.isDark ? 'bg-white/20' : 'bg-black/20'} mx-1`}></div>
                 
                 {/* Color Palette */}
-                <div className="flex gap-1.5 items-center bg-black/30 p-1 rounded-md">
+                <div className={`flex gap-1.5 items-center ${theme.isDark ? 'bg-black/30' : 'bg-black/10'} p-1 rounded-md`}>
                     {['#1f2937', '#dc2626', '#2563eb', '#16a34a', '#9333ea'].map(c => (
                         <button 
                             key={c}
@@ -431,7 +433,7 @@ const GeometryCanvas = ({ onSolveCanvas }) => {
 
             <button
                 onClick={handleSolve}
-                className="mt-4 flex items-center justify-center gap-2 bg-gradient-to-r from-[#a855f7] to-[#00f5ff] hover:from-[#b86cf7] hover:to-[#1cf5ff] text-white py-3.5 rounded-xl transition-all font-orbitron tracking-wider shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:scale-[1.02]"
+                className="mt-4 flex items-center justify-center gap-2 bg-gradient-to-r from-[#a855f7] to-[#00f5ff] hover:from-[#b86cf7] hover:to-[#1cf5ff] py-3.5 rounded-xl transition-all font-orbitron tracking-wider shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:scale-[1.02] text-black dark:text-white"
             >
                 <Wand2 size={20} /> Solve with AI
             </button>

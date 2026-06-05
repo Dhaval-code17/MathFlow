@@ -173,7 +173,7 @@ const PracticeMode = () => {
                     <motion.div
                         initial={{ scale: 0.9 }}
                         animate={{ scale: 1 }}
-                        className="rounded-2xl p-6 w-[400px]"
+                        className="rounded-2xl p-6 w-full max-w-[400px] mx-4"
                         style={{
                             background: 'rgba(15, 20, 35, 0.95)',
                             border: '1px solid rgba(0, 245, 255, 0.2)',
@@ -271,7 +271,7 @@ const PracticeMode = () => {
                     <motion.div
                         initial={{ scale: 0.9 }}
                         animate={{ scale: 1 }}
-                        className="rounded-2xl p-6 w-[400px]"
+                        className="rounded-2xl p-6 w-full max-w-[400px] mx-4"
                         style={{
                             background: 'rgba(15, 20, 35, 0.95)',
                             border: '1px solid rgba(0, 245, 255, 0.2)',

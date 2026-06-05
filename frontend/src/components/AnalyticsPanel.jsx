@@ -88,7 +88,7 @@ const AnalyticsPanel = () => {
 
             {/* Panel */}
             <div
-                className="w-[340px] h-[520px] rounded-l-xl p-4 flex flex-col shadow-2xl overflow-hidden"
+                className="w-full max-w-[340px] sm:w-[340px] h-[80vh] sm:h-[520px] rounded-l-xl sm:rounded-l-xl rounded-r-xl sm:rounded-r-none p-4 flex flex-col shadow-2xl overflow-hidden"
                 style={{
                     background: bg,
                     backdropFilter: 'blur(20px)',

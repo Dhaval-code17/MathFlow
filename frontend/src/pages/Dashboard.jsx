@@ -12,7 +12,7 @@ import PracticeMode from '../components/PracticeMode';
 import BackgroundClickNumbers from '../components/BackgroundClickNumbers';
 import FloatingShapes from '../components/FloatingShapes';
 import CompetitiveMode from '../components/CompetitiveMode';
-import { LogOut, Sun, Moon } from 'lucide-react';
+import { LogOut, Sun, Moon, Flame } from 'lucide-react';
 import { gsap } from 'gsap';
 
 const Dashboard = () => {
@@ -20,6 +20,7 @@ const Dashboard = () => {
     const theme = useTheme();
     const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const [refreshHistory, setRefreshHistory] = useState(0);
+    const [isCompetitiveOpen, setIsCompetitiveOpen] = useState(false);
     const contentRef = useRef(null);
 
     useEffect(() => {
@@ -48,11 +49,23 @@ const Dashboard = () => {
             <PracticeMode />
             <BackgroundClickNumbers />
             <FloatingShapes />
-            <CompetitiveMode />
+            <CompetitiveMode isOpen={isCompetitiveOpen} onClose={() => setIsCompetitiveOpen(false)} />
 
             <div ref={contentRef} className="w-full h-full">
                 {/* Top bar — theme toggle, user, logout */}
-                <div className="absolute top-4 right-4 flex items-center gap-3 z-40">
+                <div className={`absolute top-4 right-4 flex items-center gap-3 z-40 transition-opacity duration-300 ${isHistoryOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                    <button
+                        onClick={() => setIsCompetitiveOpen(true)}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm font-orbitron transition-all hover:bg-red-500/10"
+                        style={{
+                            background: theme.isDark ? 'rgba(239,68,68,0.1)' : 'rgba(239,68,68,0.05)',
+                            borderColor: 'rgba(239, 68, 68, 0.3)',
+                            color: '#ef4444',
+                        }}
+                    >
+                        <Flame className="w-4 h-4" />
+                        <span className="hidden md:inline">COMPETE</span>
+                    </button>
                     {/* Theme Toggle */}
                     <button
                         onClick={theme.toggleTheme}
@@ -81,7 +94,7 @@ const Dashboard = () => {
                     </button>
                 </div>
 
-                <div className="flex gap-8 items-center justify-center relative z-10 w-full min-h-screen">
+                <div className="flex flex-col lg:flex-row gap-4 md:gap-8 items-center justify-center relative z-10 w-full min-h-screen pt-24 pb-12 lg:py-0 px-2 sm:px-4">
                     <div className="relative">
                         <RobotCharacter />
                         <Calculator

@@ -71,10 +71,9 @@ const getDifficulty = (streak) => {
 
 const GAME_DURATION = 60;
 
-const CompetitiveMode = () => {
+const CompetitiveMode = ({ isOpen, onClose }) => {
     const { isDark } = useTheme();
     const { user } = useAuth();
-    const [isOpen, setIsOpen] = useState(false);
     const [gameState, setGameState] = useState('idle'); // idle | playing | finished
     const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
     const [score, setScore] = useState(0);
@@ -194,7 +193,7 @@ const CompetitiveMode = () => {
     };
 
     const handleClose = () => {
-        setIsOpen(false);
+        onClose();
         setGameState('idle');
         clearInterval(timerRef.current);
     };
@@ -209,23 +208,6 @@ const CompetitiveMode = () => {
 
     return (
         <>
-            {/* Floating trigger button */}
-            <button
-                onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full font-orbitron text-xs tracking-wider transition-all duration-300 group"
-                style={{
-                    background: isDark
-                        ? 'linear-gradient(135deg, rgba(239,68,68,0.2), rgba(245,158,11,0.2))'
-                        : 'linear-gradient(135deg, rgba(239,68,68,0.15), rgba(245,158,11,0.15))',
-                    border: '1px solid rgba(239, 68, 68, 0.3)',
-                    color: '#ef4444',
-                    boxShadow: '0 0 20px rgba(239,68,68,0.15)',
-                }}
-            >
-                <Flame className="w-4 h-4 group-hover:animate-bounce" />
-                COMPETE
-            </button>
-
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -239,7 +221,7 @@ const CompetitiveMode = () => {
                             initial={{ scale: 0.9, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
-                            className="relative w-[440px] max-h-[90vh] rounded-2xl p-6 overflow-y-auto"
+                            className="relative w-full max-w-[440px] mx-4 max-h-[90vh] rounded-2xl p-6 overflow-y-auto"
                             style={{
                                 background: bg,
                                 border: '1px solid rgba(239, 68, 68, 0.2)',

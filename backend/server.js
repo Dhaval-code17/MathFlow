@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+const path = require('path');
 const cors = require('cors');
 const morgan = require('morgan');
 const { initDB } = require('./config/db');
@@ -20,13 +21,18 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(morgan('dev'));
 
 // Serve frontend static files
-app.use(express.static('frontend'));
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Routes
 app.use('/api', authRoutes);
 app.use('/api', calculationRoutes);
 app.use('/api', competitiveRoutes);
 app.use('/api', aiRoutes);
+
+// Catch-all route to serve React app for non-API requests
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
 
 // Database and Server Initialization
 const startServer = async () => {

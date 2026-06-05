@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { Delete, History, Camera } from 'lucide-react';
+import { Delete, History, Camera, Sparkles } from 'lucide-react';
 import SoundEngine from '../utils/SoundEngine';
 import { useMath } from '../context/MathContext';
 import { useTheme } from '../context/ThemeContext';
@@ -121,7 +121,7 @@ const HiddenStats = ({ isOpen, onClose }) => {
             onClick={onClose}
         >
             <div
-                className="w-[360px] rounded-2xl p-6"
+                className="w-full max-w-[360px] mx-4 rounded-2xl p-6"
                 style={{
                     background: 'rgba(10, 14, 30, 0.95)',
                     border: '1px solid rgba(0, 245, 255, 0.2)',
@@ -190,6 +190,7 @@ const Calculator = ({ onHistoryClick, onCalculationComplete }) => {
     const { registerCalculation, recordKeystroke, operatorStats } = useMath();
     const theme = useTheme();
     const calcRef = useRef(null);
+    const cameraInputRef = useRef(null);
 
     // Easter Egg State
     const [isPiMode, setIsPiMode] = useState(false);
@@ -350,6 +351,19 @@ const Calculator = ({ onHistoryClick, onCalculationComplete }) => {
         setShowResult(true);
     };
 
+    const handleCameraCapture = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setAiInitialImage(reader.result);
+                setIsAiModalOpen(true);
+                e.target.value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleExpressionClick = () => {
         if (lastExpression) {
             setDisplay(lastExpression);
@@ -413,9 +427,26 @@ const Calculator = ({ onHistoryClick, onCalculationComplete }) => {
                 )}
             </AnimatePresence>
 
+            {/* Floating Solve with AI button */}
+            <button
+                onClick={() => setIsAiModalOpen(true)}
+                className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full font-orbitron text-xs tracking-wider transition-all duration-300 group hover:scale-105"
+                style={{
+                    background: theme.isDark
+                        ? 'linear-gradient(135deg, rgba(168,85,247,0.2), rgba(0,245,255,0.2))'
+                        : 'linear-gradient(135deg, rgba(168,85,247,0.15), rgba(0,245,255,0.15))',
+                    border: '1px solid rgba(168, 85, 247, 0.4)',
+                    color: theme.isDark ? '#e9d5ff' : '#9333ea',
+                    boxShadow: '0 0 20px rgba(168,85,247,0.2)',
+                }}
+            >
+                <Sparkles className="w-4 h-4 text-[#a855f7] group-hover:animate-pulse" />
+                SOLVE WITH AI
+            </button>
+
             <div
                 ref={calcRef}
-                className={`relative ${calcMode !== 'basic' ? 'w-[540px]' : 'w-[420px]'} aspect-[4/5] rounded-2xl p-6 flex flex-col gap-4 transition-all duration-500`}
+                className={`relative w-full ${calcMode !== 'basic' ? 'max-w-[540px]' : 'max-w-[420px]'} aspect-[3/4] sm:aspect-[4/5] rounded-2xl p-4 sm:p-6 flex flex-col gap-4 transition-all duration-500`}
                 style={{
                     background: theme.card,
                     backdropFilter: 'blur(24px)',
@@ -479,8 +510,19 @@ const Calculator = ({ onHistoryClick, onCalculationComplete }) => {
                                 </span>
                             ))}
                         </div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            ref={cameraInputRef}
+                            style={{ display: 'none' }}
+                            onChange={handleCameraCapture}
+                        />
                         <button
-                            onClick={() => { SoundEngine.playOperator(); setIsAiModalOpen(true); }}
+                            onClick={() => {
+                                SoundEngine.playOperator();
+                                cameraInputRef.current?.click();
+                            }}
                             className="text-gray-500 hover:text-[#a855f7] transition-colors"
                             title="AI Camera Math Solver"
                         >

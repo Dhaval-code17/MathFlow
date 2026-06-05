@@ -19,6 +19,13 @@ const AiMathSolver = ({ isOpen, onClose, initialImage }) => {
     const chatEndRef = useRef(null);
 
     useEffect(() => {
+        if (isOpen) {
+            // Ensure a new chat session is started every time the modal is opened
+            createNewSession();
+        }
+    }, [isOpen]);
+
+    useEffect(() => {
         if (isOpen && initialImage) {
             setImage(initialImage);
             setPreview(initialImage);
@@ -44,6 +51,26 @@ const AiMathSolver = ({ isOpen, onClose, initialImage }) => {
                 setImage(reader.result);
             };
             reader.readAsDataURL(file);
+        }
+    };
+
+    const handlePaste = (e) => {
+        const items = e.clipboardData?.items;
+        if (!items) return;
+
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                const file = items[i].getAsFile();
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setPreview(reader.result);
+                        setImage(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+                break;
+            }
         }
     };
 
@@ -195,6 +222,7 @@ const AiMathSolver = ({ isOpen, onClose, initialImage }) => {
                                     value={message}
                                     onChange={e => setMessage(e.target.value)}
                                     onKeyDown={e => e.key === 'Enter' && handleSend()}
+                                    onPaste={handlePaste}
                                     placeholder="Ask a question or upload a math problem..."
                                     className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-[#00f5ff]/50 transition-colors font-mono text-sm"
                                 />
